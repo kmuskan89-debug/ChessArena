@@ -1,0 +1,112 @@
+{
+  "categories": [
+    {
+      "id": "greetings",
+      "keywords": ["hi", "hello", "hey", "greetings", "good morning", "good evening", "howdy", "sup", "yo"],
+      "replies": [
+        "Hey there! Ready to play some chess or talk tactics?",
+        "Hello! Great to have you in the Chess Arena. How's your game going?",
+        "Hi! Need some advice, opening tips, or just want to chat while playing?",
+        "Hey! Let me know if you need any tips on strategy or want to learn more about this project."
+      ]
+    },
+    {
+      "id": "about",
+      "keywords": ["who are you", "about you", "creator", "who made you", "author", "developer", "who built this", "what are you"],
+      "replies": [
+        "I'm your Chess Arena companion! This platform was built by [Your Name / Atman], a developer passionate about building modern web experiences.",
+        "I'm the virtual assistant here in Chess Arena, developed by [Your Name] using the MERN stack.",
+        "You're chatting with the Chess Arena assistant. The project is created by [Your Name] as a full-featured chess experience.",
+        "I'm an in-browser companion for Chess Arena created by [Your Name]. You can customize my replies in `client/src/data/botReplies.json`!"
+      ]
+    },
+    {
+      "id": "skills",
+      "keywords": ["tech stack", "technologies", "tech", "mern", "react", "express", "node", "vite", "chessjs", "minimax", "how was this built", "stack"],
+      "replies": [
+        "Chess Arena is built on the MERN stack! The frontend uses React 19, Vite, chess.js for validation, react-chessboard, and a Minimax engine running in a Web Worker.",
+        "Under the hood: React + Vite frontend, an alpha-beta pruning Minimax chess engine running on a background worker thread, and a Node.js + Express backend.",
+        "Tech stack highlights: React with custom hooks, CSS grid dark theme, chess.js rules engine, react-chessboard for DnD, and client-side minimax calculations."
+      ]
+    },
+    {
+      "id": "chessTips",
+      "keywords": ["tip", "tips", "advice", "opening", "endgame", "improve", "tactics", "strategy", "blunder", "how to improve"],
+      "replies": [
+        "Opening Principle: Control the center squares (e4, d4, e5, d5), develop knights before bishops, and castle early for king safety!",
+        "Tactical Tip: Look for undefended pieces! Before making your move, always check if your opponent has checks, captures, or threats (CCT).",
+        "Endgame Rule: In pawn endgames, king activity is paramount. Activate your king and push passed pawns as quickly as possible.",
+        "Piece Mobility: A knight on the rim is dim! Keep your knights and bishops pointed toward the center of the board.",
+        "Patience: When you see a good move, wait and look for an even better one!"
+      ]
+    },
+    {
+      "id": "rating",
+      "keywords": ["rating", "elo", "rank", "level", "difficulty", "how good are you"],
+      "replies": [
+        "My chess engine runs at 3 difficulty levels: Easy (~1200 ELO, depth 1), Medium (~1500 ELO, depth 2), and Hard (~1800 ELO, depth 3). You can switch difficulty anytime!",
+        "Right now, you can challenge me across Easy (1200), Medium (1500), and Hard (1800) levels. Depth 3 calculates several moves ahead with alpha-beta pruning!",
+        "I evaluate material and positional piece-square tables. Change my depth in the controls panel on the right to test your skills."
+      ]
+    },
+    {
+      "id": "thanks",
+      "keywords": ["thank you", "thanks", "thx", "appreciate", "helpful", "good job"],
+      "replies": [
+        "You're very welcome! Let me know if you want to know anything else or need another tip.",
+        "Glad to help! Now show me your best move on the board!",
+        "Anytime! May your moves be blameless and your tactics sharp."
+      ]
+    },
+    {
+      "id": "farewell",
+      "keywords": ["bye", "goodbye", "cya", "see you", "later", "have to go"],
+      "replies": [
+        "Good game! Come back soon for another match.",
+        "See you later! Keep practicing those openings.",
+        "Goodbye! Thanks for playing in the Chess Arena."
+      ]
+    }
+  ],
+  "commentary": {
+    "userCapture": [
+      "Nice capture! That gives you tangible piece initiative.",
+      "Good trade. Keep an eye on the open lines created by that capture.",
+      "Clean capture! Let's see how the board dynamics shift.",
+      "Material off the board! What's your follow-up plan?"
+    ],
+    "botCapture": [
+      "I'll take that piece! The board is opening up.",
+      "Piece captured! Every material advantage counts.",
+      "I grabbed that piece. How will you respond?",
+      "That exchange tilts material my way!"
+    ],
+    "userCheck": [
+      "Check! Your king is under attack — look for blocks, moves, or captures.",
+      "Check! Careful with your king safety here.",
+      "Check! You must resolve the threat to your king."
+    ],
+    "gameOverWin": [
+      "Checkmate! Brilliant game, you outplayed me!",
+      "Victory is yours! Outstanding tactics and positional execution.",
+      "Checkmate! Well played, that was a masterclass."
+    ],
+    "gameOverLoss": [
+      "Checkmate! Good fight, but that's game. Ready for a rematch?",
+      "Checkmate! Strong effort — analysis will reveal great lessons from this one.",
+      "Game over! That was a sharp battle. Hit 'New Game' for another round!"
+    ],
+    "gameOverDraw": [
+      "A hard-fought draw! Perfect balance on the board.",
+      "Game drawn! Solid defense from both sides.",
+      "It's a draw! Neither side could break through."
+    ]
+  },
+  "fallback": [
+    "Interesting! You can ask me for chess tips, opening principles, details on our MERN tech stack, or difficulty ratings.",
+    "I'm tuned for chess tactics and arena information! Feel free to ask about how this app was built or for endgame tips.",
+    "Not sure about that one, but ask me about chess strategies, our tech stack, or the developer details!",
+    "I'm keeping my eyes on our chess match! Ask me for a tip, or about the minimax engine powering our game."
+  ]
+}
+

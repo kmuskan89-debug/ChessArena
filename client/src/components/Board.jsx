@@ -9,43 +9,50 @@ export default function Board({
   currentTurn,
   isBotThinking = false,
   difficulty = 'medium',
+  playerName = 'You',
+  playerRating = 1200,
+  timeControl = '5m',
+  whiteTime = null,
+  blackTime = null,
   lastMove,
   selectedSquare,
   legalMoves,
   makeMove,
   handleSquareClick,
 }) {
-  // Compute square styles for last moves and legal move indicators
+  // Compute square styles for last moves and legal move indicators using CSS palette
   const customSquareStyles = useMemo(() => {
     const styles = {};
 
-    // 1. Highlight last move (from & to)
+    // 1. Highlight last move (from & to) using --highlight: rgba(156, 61, 46, 0.30)
     if (lastMove) {
       styles[lastMove.from] = {
-        backgroundColor: 'rgba(168, 85, 247, 0.32)',
+        backgroundColor: 'var(--highlight)',
       };
       styles[lastMove.to] = {
-        backgroundColor: 'rgba(168, 85, 247, 0.48)',
+        backgroundColor: 'var(--highlight)',
       };
     }
 
-    // 2. Highlight selected square & legal moves (only if user's turn and not thinking)
+    // 2. Highlight selected square & legal moves
     if (selectedSquare && !isBotThinking && currentTurn === userColor) {
       styles[selectedSquare] = {
-        backgroundColor: 'rgba(192, 132, 252, 0.65)',
+        backgroundColor: 'var(--highlight)',
       };
 
       legalMoves.forEach((move) => {
         const isCapture = Boolean(move.captured) || move.flags?.includes('c') || move.flags?.includes('e');
         if (isCapture) {
+          // Capture target: ring in --legal-dot rgba(43, 38, 32, 0.25)
           styles[move.to] = {
             background:
-              'radial-gradient(circle, transparent 52%, rgba(239, 68, 68, 0.75) 56%, rgba(239, 68, 68, 0.75) 68%, transparent 72%)',
+              'radial-gradient(circle, transparent 55%, var(--legal-dot) 57%, var(--legal-dot) 70%, transparent 72%)',
             cursor: 'pointer',
           };
         } else {
+          // Standard legal move: dot in --legal-dot rgba(43, 38, 32, 0.25)
           styles[move.to] = {
-            background: 'radial-gradient(circle, rgba(168, 85, 247, 0.85) 24%, transparent 28%)',
+            background: 'radial-gradient(circle, var(--legal-dot) 25%, transparent 26%)',
             cursor: 'pointer',
           };
         }
@@ -55,7 +62,7 @@ export default function Board({
     return styles;
   }, [lastMove, selectedSquare, legalMoves, isBotThinking, currentTurn, userColor]);
 
-  // Drop handler: prevents moving if bot is thinking or it's not user's turn
+  // Drop handler
   const handlePieceDrop = (arg1, arg2) => {
     if (isBotThinking || currentTurn !== userColor) {
       return false;
@@ -85,24 +92,27 @@ export default function Board({
     }
   };
 
-  // Determine top player (Opponent / Bot) vs bottom player (User)
   const isWhiteOrientation = boardOrientation === 'white';
   const topColor = isWhiteOrientation ? 'black' : 'white';
   const bottomColor = isWhiteOrientation ? 'white' : 'black';
 
   const isUserTop = userColor === topColor;
-  const botRating = difficulty === 'easy' ? 1200 : difficulty === 'medium' ? 1500 : 1800;
+  const botRating = difficulty === 'easy' ? 800 : difficulty === 'medium' ? 1200 : 1600;
+
+  const topClock = timeControl !== 'none' ? (topColor === 'white' ? whiteTime : blackTime) : null;
+  const bottomClock = timeControl !== 'none' ? (bottomColor === 'white' ? whiteTime : blackTime) : null;
 
   return (
     <div className="board-column-wrapper">
       {/* Top Player Info Bar (Above Board) */}
       <PlayerInfo
-        name={isUserTop ? 'You' : `ChessBot (${difficulty.toUpperCase()})`}
-        rating={isUserTop ? 1500 : botRating}
+        name={isUserTop ? playerName : `ChessBot (${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)})`}
+        rating={isUserTop ? playerRating : botRating}
         color={topColor}
         isTurn={currentTurn === topColor}
         isThinking={!isUserTop && isBotThinking}
         statusText={!isUserTop && isBotThinking ? 'Thinking...' : 'To move'}
+        timeRemaining={topClock}
       />
 
       {/* Chessboard */}
@@ -112,11 +122,12 @@ export default function Board({
             position: fen,
             boardOrientation,
             squareStyles: customSquareStyles,
-            darkSquareStyle: { backgroundColor: '#5c3d84' },
-            lightSquareStyle: { backgroundColor: '#e2d9f3' },
+            darkSquareStyle: { backgroundColor: 'var(--board-dark)' },
+            lightSquareStyle: { backgroundColor: 'var(--board-light)' },
             boardStyle: {
-              borderRadius: '12px',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.55)',
+              borderRadius: 'var(--radius-panel)',
+              border: '1px solid var(--border)',
+              boxShadow: 'none',
               overflow: 'hidden',
             },
             onPieceDrop: handlePieceDrop,
@@ -132,12 +143,13 @@ export default function Board({
 
       {/* Bottom Player Info Bar (Below Board) */}
       <PlayerInfo
-        name={!isUserTop ? 'You' : `ChessBot (${difficulty.toUpperCase()})`}
-        rating={!isUserTop ? 1500 : botRating}
+        name={!isUserTop ? playerName : `ChessBot (${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)})`}
+        rating={!isUserTop ? playerRating : botRating}
         color={bottomColor}
         isTurn={currentTurn === bottomColor}
         isThinking={isUserTop && isBotThinking}
         statusText={isUserTop && isBotThinking ? 'Thinking...' : 'To move'}
+        timeRemaining={bottomClock}
       />
     </div>
   );

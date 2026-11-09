@@ -1,47 +1,37 @@
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
 
 export default function Home() {
+  const { isAuthenticated } = useAuth();
+
   return (
     <div className="home-container">
-      <div className="home-hero-card">
-        <div className="home-badge">
-          <span>⚡ Live Interactive Chess</span>
-        </div>
-        <div className="home-icon-header">
-          <span className="home-chess-piece">♞</span>
-        </div>
+      <div className="home-card">
         <h1 className="home-title">Chess Arena</h1>
-        <p className="home-subtitle">
-          Master the board. Play, analyze moves in real time, and sharpen your tactics
-          in a sleek modern arena.
+        <p className="home-description">
+          A minimalist chess arena to play against an AI bot, review past matches, and track your rating.
         </p>
 
         <div className="home-actions">
-          <Link to="/play" className="btn btn-primary btn-large">
-            <span>Play Now</span>
-            <span className="btn-arrow">→</span>
+          <Link to="/play" className="btn btn-primary home-play-btn">
+            Play
           </Link>
         </div>
 
-        <div className="home-features-grid">
-          <div className="feature-item">
-            <span className="feature-icon">🛡️</span>
-            <h4>Full Rule Validation</h4>
-            <p>Powered by chess.js with move validation and check detection.</p>
-          </div>
-          <div className="feature-item">
-            <span className="feature-icon">🎯</span>
-            <h4>Interactive Board</h4>
-            <p>Drag-and-drop, click-to-move, legal move dots, and move highlights.</p>
-          </div>
-          <div className="feature-item">
-            <span className="feature-icon">📋</span>
-            <h4>SAN Notation</h4>
-            <p>Auto-scrolling move history paired move-by-move.</p>
-          </div>
+        <div className="home-secondary-links">
+          <Link to="/leaderboard" className="home-link">
+            Leaderboard
+          </Link>
+          {!isAuthenticated && (
+            <>
+              <span className="home-link-divider">·</span>
+              <Link to="/login" className="home-link">
+                Log In
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>
   );
 }
-

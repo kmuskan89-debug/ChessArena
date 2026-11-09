@@ -11,20 +11,16 @@ export default function MovesPanel({ movePairs }) {
   return (
     <div className="panel moves-panel">
       <div className="panel-header">
-        <div className="panel-title-group">
-          <span className="panel-icon">📋</span>
-          <h3 className="panel-title">MOVES</h3>
-        </div>
-        <span className="moves-count-pill">
-          {movePairs.length === 0 ? '0 turns' : `${movePairs.length} turns`}
+        <h3 className="panel-title">Moves</h3>
+        <span className="moves-count-text">
+          {movePairs.length === 0 ? '0 moves' : `${movePairs.length} turns`}
         </span>
       </div>
 
       <div className="moves-list-scrollable">
         {movePairs.length === 0 ? (
           <div className="moves-empty-state">
-            <span className="empty-state-icon">♟</span>
-            <p>Game started. Make a move on the board to begin!</p>
+            <p>No moves yet. Play a piece to begin.</p>
           </div>
         ) : (
           <table className="moves-table">
@@ -58,4 +54,3 @@ export default function MovesPanel({ movePairs }) {
     </div>
   );
 }
-

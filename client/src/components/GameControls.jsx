@@ -4,23 +4,38 @@ export default function GameControls({
   isBotThinking = false,
   userColor = 'white',
   difficulty = 'medium',
+  timeControl = '5m',
+  isMuted = false,
   onDifficultyChange,
+  onTimeControlChange,
   onToggleSide,
+  onToggleMute,
   onResetGame,
   onFlipBoard,
   boardOrientation,
 }) {
   const isWhiteTurn = currentTurn === 'white';
 
+  const timeControlOptions = [
+    { id: 'none', label: 'Practice' },
+    { id: '3m', label: '3 min' },
+    { id: '5m', label: '5 min' },
+    { id: '10m', label: '10 min' },
+  ];
+
   return (
     <div className="game-controls-container">
       {/* Turn & Status Indicator */}
       <div className={`status-card status-${gameStatus.type}`}>
         <div className="status-header">
-          <span className="status-label">CURRENT STATUS</span>
+          <span className="status-label">Status</span>
           {gameStatus.type !== 'active' && (
             <span className={`status-badge badge-${gameStatus.type}`}>
-              {gameStatus.type === 'bot-thinking' ? 'AI THINKING' : gameStatus.type.toUpperCase()}
+              {gameStatus.type === 'bot-thinking'
+                ? 'Thinking'
+                : gameStatus.type === 'timeout'
+                ? 'Time out'
+                : gameStatus.type}
             </span>
           )}
         </div>
@@ -33,10 +48,32 @@ export default function GameControls({
         </div>
       </div>
 
+      {/* Clock Time Control Selector */}
+      <div className="settings-panel">
+        <div className="settings-header">
+          <span className="settings-label">Time Control</span>
+          <span className="settings-depth-hint">
+            {timeControl === 'none' ? 'Unlimited' : `${timeControl}`}
+          </span>
+        </div>
+        <div className="difficulty-segmented-control time-segmented-control">
+          {timeControlOptions.map((opt) => (
+            <button
+              key={opt.id}
+              type="button"
+              className={`segmented-btn ${timeControl === opt.id ? 'active-level' : ''}`}
+              onClick={() => onTimeControlChange(opt.id)}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Bot Difficulty Selector */}
       <div className="settings-panel">
         <div className="settings-header">
-          <span className="settings-label">BOT DIFFICULTY</span>
+          <span className="settings-label">Difficulty</span>
           <span className="settings-depth-hint">
             {difficulty === 'easy' ? 'Depth 1' : difficulty === 'medium' ? 'Depth 2' : 'Depth 3'}
           </span>
@@ -55,10 +92,17 @@ export default function GameControls({
         </div>
       </div>
 
-      {/* Play Side Selector (Play as White / Play as Black) */}
+      {/* Play Side Selector */}
       <div className="settings-panel">
         <div className="settings-header">
-          <span className="settings-label">YOUR SIDE</span>
+          <span className="settings-label">Your Side</span>
+          <button
+            type="button"
+            className={`btn-mute-toggle ${isMuted ? 'muted' : ''}`}
+            onClick={onToggleMute}
+          >
+            {isMuted ? 'Sound off' : 'Sound on'}
+          </button>
         </div>
         <div className="side-segmented-control">
           <button
@@ -66,16 +110,14 @@ export default function GameControls({
             className={`segmented-btn side-btn ${userColor === 'white' ? 'active-side' : ''}`}
             onClick={() => onToggleSide('white')}
           >
-            <span className="side-icon">♔</span>
-            <span>Play as White</span>
+            Play as White
           </button>
           <button
             type="button"
             className={`segmented-btn side-btn ${userColor === 'black' ? 'active-side' : ''}`}
             onClick={() => onToggleSide('black')}
           >
-            <span className="side-icon">♚</span>
-            <span>Play as Black</span>
+            Play as Black
           </button>
         </div>
       </div>
@@ -88,8 +130,7 @@ export default function GameControls({
           onClick={onFlipBoard}
           title={`Board currently oriented to ${boardOrientation}`}
         >
-          <span className="btn-icon">🔄</span>
-          <span>Flip Board</span>
+          Flip Board
         </button>
 
         <button
@@ -97,8 +138,7 @@ export default function GameControls({
           className="btn btn-primary"
           onClick={() => onResetGame()}
         >
-          <span className="btn-icon">⚔️</span>
-          <span>New Game</span>
+          New Game
         </button>
       </div>
     </div>
