@@ -1,20 +1,14 @@
-import { Routes, Route } from 'react-router-dom'
-import './App.css'
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Home from './pages/Home.jsx';
+import Play from './pages/Play.jsx';
+import './App.css';
 
-function App() {
+export default function App() {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <div style={{ textAlign: 'center', padding: '3rem' }}>
-            <h1>Chess Arena</h1>
-            <p>MERN stack starter template initialized.</p>
-          </div>
-        }
-      />
+      <Route path="/" element={<Home />} />
+      <Route path="/play" element={<Play />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
-  )
+  );
 }
-
-export default App
