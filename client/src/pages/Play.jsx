@@ -7,10 +7,13 @@ import Board from '../components/Board.jsx';
 import MovesPanel from '../components/MovesPanel.jsx';
 import GameControls from '../components/GameControls.jsx';
 import TalkWithMe from '../components/TalkWithMe.jsx';
+import muskanAvatar from '../assets/muskan.jpg';
 
 export default function Play() {
   const { user, isAuthenticated, updateUserRating } = useAuth();
   const [saveToast, setSaveToast] = useState({ visible: false, message: '' });
+  const [dismissedGameOver, setDismissedGameOver] = useState(false);
+  const [ratingUpdate, setRatingUpdate] = useState(null);
   const hasSavedCurrentGameRef = useRef(false);
 
   const {
@@ -21,6 +24,7 @@ export default function Play() {
     difficulty,
     isBotThinking,
     isGameOver,
+    gameResult,
     gameStatus,
     completedGameData,
     movePairs,
@@ -66,6 +70,10 @@ export default function Play() {
             updateUserRating(newRating);
           }
 
+          if (typeof ratingChange === 'number' && typeof newRating === 'number') {
+            setRatingUpdate({ newRating, ratingChange });
+          }
+
           const changeFormatted = typeof ratingChange === 'number'
             ? `${ratingChange >= 0 ? '+' : ''}${ratingChange} → ${newRating}`
             : null;
@@ -90,21 +98,106 @@ export default function Play() {
 
   const handleResetGame = () => {
     hasSavedCurrentGameRef.current = false;
+    setDismissedGameOver(false);
+    setRatingUpdate(null);
     resetGame();
   };
 
   const handleToggleSide = (newSide) => {
     hasSavedCurrentGameRef.current = false;
+    setDismissedGameOver(false);
+    setRatingUpdate(null);
     togglePlaySide(newSide);
   };
 
   const handleTimeControlChange = (newControl) => {
     hasSavedCurrentGameRef.current = false;
+    setDismissedGameOver(false);
+    setRatingUpdate(null);
     setTimeControl(newControl);
   };
 
+  const winnerHeading =
+    gameResult === 'win'
+      ? playerName === 'You'
+        ? 'You Win'
+        : `${playerName} Wins`
+      : gameResult === 'loss'
+      ? 'Muskan Wins'
+      : 'Draw';
+
   return (
     <div className="play-page-container">
+      {/* Winner / Game Over Modal Overlay */}
+      {isGameOver && !dismissedGameOver && (
+        <div
+          className="gameover-modal-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="gameover-winner-heading"
+        >
+          <div className="gameover-modal-card">
+            {gameResult === 'loss' && (
+              <img src={muskanAvatar} alt="Muskan" className="gameover-winner-avatar" />
+            )}
+
+            <span
+              className={`result-badge gameover-result-badge ${
+                gameResult === 'win'
+                  ? 'result-win'
+                  : gameResult === 'loss'
+                  ? 'result-loss'
+                  : 'result-draw'
+              }`}
+            >
+              {gameResult === 'win' ? 'Win' : gameResult === 'loss' ? 'Loss' : 'Draw'}
+            </span>
+
+            <h2 id="gameover-winner-heading" className="gameover-winner-title">
+              {winnerHeading}
+            </h2>
+
+            <p className="gameover-reason-text">{gameStatus.text}</p>
+
+            {ratingUpdate && (
+              <div className="gameover-rating-box">
+                <span
+                  className={`rating-change-pill ${
+                    ratingUpdate.ratingChange > 0
+                      ? 'rating-pill-gain'
+                      : ratingUpdate.ratingChange < 0
+                      ? 'rating-pill-loss'
+                      : 'rating-pill-neutral'
+                  }`}
+                >
+                  {ratingUpdate.ratingChange > 0
+                    ? `+${ratingUpdate.ratingChange}`
+                    : ratingUpdate.ratingChange}{' '}
+                  → {ratingUpdate.newRating}
+                </span>
+              </div>
+            )}
+
+            <div className="gameover-modal-actions">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleResetGame}
+              >
+                Play Again
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => setDismissedGameOver(true)}
+              >
+                View Board
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Toast Notification */}
       {saveToast.visible && (
         <div className="game-saved-toast" role="status">
