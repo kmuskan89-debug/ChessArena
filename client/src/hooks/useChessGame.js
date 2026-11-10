@@ -35,6 +35,9 @@ export function useChessGame() {
   const clockIntervalRef = useRef(null);
   const requestIdRef = useRef(0);
   const requestStartTimeRef = useRef(0);
+  const clockSessionRef = useRef(0);
+  const whiteTimeMsRef = useRef(TIME_CONTROLS['5m'] * 1000);
+  const blackTimeMsRef = useRef(TIME_CONTROLS['5m'] * 1000);
 
   // Board & game state
   const [fen, setFen] = useState(chessRef.current.fen());
@@ -124,7 +127,7 @@ export function useChessGame() {
     if (isBotThinking) {
       return {
         type: 'bot-thinking',
-        text: 'Bot is thinking...',
+        text: 'Muskan is thinking...',
         isTerminal: false,
       };
     }
@@ -174,35 +177,50 @@ export function useChessGame() {
     setIsMuted(next);
   }, []);
 
-  // Clock countdown ticker
+  // Clock countdown ticker (tracks exact milliseconds across sub-second bot turns)
   useEffect(() => {
     if (timeControl === 'none' || moveHistory.length === 0 || isGameOver) {
       if (clockIntervalRef.current) clearInterval(clockIntervalRef.current);
       return;
     }
 
-    clockIntervalRef.current = setInterval(() => {
-      if (currentTurn === 'white') {
-        setWhiteTime((prev) => {
-          if (prev <= 1) {
-            setTimeoutWinner('black');
-            return 0;
-          }
-          return prev - 1;
-        });
+    const session = clockSessionRef.current;
+    const activeTurn = currentTurn;
+    let lastTick = Date.now();
+
+    const applyElapsed = (elapsedMs) => {
+      if (clockSessionRef.current !== session || elapsedMs <= 0) return;
+
+      if (activeTurn === 'white') {
+        const nextMs = Math.max(0, whiteTimeMsRef.current - elapsedMs);
+        whiteTimeMsRef.current = nextMs;
+        const nextSec = Math.ceil(nextMs / 1000);
+        setWhiteTime((prev) => (prev !== nextSec ? nextSec : prev));
+        if (nextMs <= 0) {
+          setTimeoutWinner('black');
+        }
       } else {
-        setBlackTime((prev) => {
-          if (prev <= 1) {
-            setTimeoutWinner('white');
-            return 0;
-          }
-          return prev - 1;
-        });
+        const nextMs = Math.max(0, blackTimeMsRef.current - elapsedMs);
+        blackTimeMsRef.current = nextMs;
+        const nextSec = Math.ceil(nextMs / 1000);
+        setBlackTime((prev) => (prev !== nextSec ? nextSec : prev));
+        if (nextMs <= 0) {
+          setTimeoutWinner('white');
+        }
       }
-    }, 1000);
+    };
+
+    clockIntervalRef.current = setInterval(() => {
+      const now = Date.now();
+      const elapsed = now - lastTick;
+      lastTick = now;
+      applyElapsed(elapsed);
+    }, 100);
 
     return () => {
       if (clockIntervalRef.current) clearInterval(clockIntervalRef.current);
+      // Deduct the final partial interval spent on this turn
+      applyElapsed(Date.now() - lastTick);
     };
   }, [timeControl, moveHistory.length, isGameOver, currentTurn]);
 
@@ -391,6 +409,7 @@ export function useChessGame() {
   const resetGame = useCallback(
     (overrideUserColor = null, overrideTimeControl = null) => {
       requestIdRef.current++;
+      clockSessionRef.current++;
       if (botTimeoutRef.current) {
         clearTimeout(botTimeoutRef.current);
         botTimeoutRef.current = null;
@@ -412,6 +431,8 @@ export function useChessGame() {
 
       const activeTimeControl = overrideTimeControl !== null ? overrideTimeControl : timeControl;
       const initialSeconds = TIME_CONTROLS[activeTimeControl] || 0;
+      whiteTimeMsRef.current = initialSeconds * 1000;
+      blackTimeMsRef.current = initialSeconds * 1000;
       setWhiteTime(initialSeconds);
       setBlackTime(initialSeconds);
 

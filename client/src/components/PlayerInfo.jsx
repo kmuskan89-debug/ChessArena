@@ -15,6 +15,7 @@ export default function PlayerInfo({
   statusText = 'Turn',
   timeRemaining = null,
   capturedPieces = [],
+  avatarSrc = null,
 }) {
   const isWhite = color === 'white';
   const hasClock = timeRemaining !== null && timeRemaining !== undefined;
@@ -23,9 +24,13 @@ export default function PlayerInfo({
   return (
     <div className={`player-info-bar ${isTurn ? 'active-turn' : ''}`}>
       <div className="player-left">
-        <span className={`player-side-disc ${isWhite ? 'side-white' : 'side-black'}`}>
-          {isWhite ? 'W' : 'B'}
-        </span>
+        {avatarSrc ? (
+          <img src={avatarSrc} alt={name} className="player-avatar-img" />
+        ) : (
+          <span className={`player-side-disc ${isWhite ? 'side-white' : 'side-black'}`}>
+            {isWhite ? 'W' : 'B'}
+          </span>
+        )}
         <div className="player-details">
           <div className="player-name-row">
             <span className="player-name">{name}</span>

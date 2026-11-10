@@ -14,10 +14,9 @@
       "id": "about",
       "keywords": ["who are you", "about you", "creator", "who made you", "author", "developer", "who built this", "what are you"],
       "replies": [
-        "I'm your Chess Arena companion! This platform was built by [Your Name / Atman], a developer passionate about building modern web experiences.",
-        "I'm the virtual assistant here in Chess Arena, developed by [Your Name] using the MERN stack.",
-        "You're chatting with the Chess Arena assistant. The project is created by [Your Name] as a full-featured chess experience.",
-        "I'm an in-browser companion for Chess Arena created by [Your Name]. You can customize my replies in `client/src/data/botReplies.json`!"
+        "I'm Muskan! Welcome to Chess Arena, built using the MERN stack.",
+        "You're playing against Muskan, your chess companion here in Chess Arena.",
+        "I'm Muskan, created as part of Chess Arena. Let's have a great match!"
       ]
     },
     {

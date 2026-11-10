@@ -121,7 +121,7 @@ export default function Play() {
         </div>
 
         <div className="header-right">
-          <span className="header-mode-badge">Practice vs Bot</span>
+          <span className="header-mode-badge">Practice vs Muskan</span>
         </div>
       </header>
 

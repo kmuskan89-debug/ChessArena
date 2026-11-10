@@ -2,13 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 import { getBotReply, getRandomReply } from '../utils/getBotReply.js';
 import { gameEventBus } from '../utils/gameEvents.js';
 import botRepliesData from '../data/botReplies.json';
+import muskanAvatar from '../assets/muskan.jpg';
 
 export default function TalkWithMe() {
   const [messages, setMessages] = useState([
     {
       id: 'init-1',
       sender: 'bot',
-      text: "Hello. I am your chess assistant. Ask me for opening tips, tech details, or make a move on the board to begin.",
+      text: "Hello! I am Muskan. Ask me for opening tips, tech details, or make a move on the board to begin.",
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
@@ -134,8 +135,11 @@ export default function TalkWithMe() {
     <div className="panel talk-with-me-panel">
       {/* Header */}
       <div className="panel-header">
-        <h3 className="panel-title">Chat</h3>
-        <span className="badge-subtle">Assistant</span>
+        <div className="chat-header-profile">
+          <img src={muskanAvatar} alt="Muskan" className="chat-header-avatar" />
+          <h3 className="panel-title">Muskan</h3>
+        </div>
+        <span className="badge-subtle">Opponent</span>
       </div>
 
       {/* Message List */}
@@ -147,16 +151,21 @@ export default function TalkWithMe() {
               key={msg.id}
               className={`chat-message-row ${isBot ? 'bot-message-row' : 'user-message-row'}`}
             >
-              <div
-                className={`chat-bubble ${isBot ? 'bot-bubble' : 'user-bubble'} ${
-                  msg.isCommentary ? 'commentary-bubble' : ''
-                }`}
-              >
-                <div className="bubble-meta">
-                  <span className="bubble-author">{isBot ? 'Bot' : 'You'}</span>
-                  <span className="bubble-time">{msg.time}</span>
+              <div className={`chat-row-inner ${isBot ? 'bot-row-inner' : 'user-row-inner'}`}>
+                {isBot && (
+                  <img src={muskanAvatar} alt="Muskan" className="chat-msg-avatar" />
+                )}
+                <div
+                  className={`chat-bubble ${isBot ? 'bot-bubble' : 'user-bubble'} ${
+                    msg.isCommentary ? 'commentary-bubble' : ''
+                  }`}
+                >
+                  <div className="bubble-meta">
+                    <span className="bubble-author">{isBot ? 'Muskan' : 'You'}</span>
+                    <span className="bubble-time">{msg.time}</span>
+                  </div>
+                  <p className="bubble-text">{msg.text}</p>
                 </div>
-                <p className="bubble-text">{msg.text}</p>
               </div>
             </div>
           );
@@ -165,12 +174,15 @@ export default function TalkWithMe() {
         {/* Animated Dots Typing Indicator */}
         {isTyping && (
           <div className="chat-message-row bot-message-row">
-            <div className="chat-bubble bot-bubble typing-bubble">
-              <span className="bubble-author">Bot</span>
-              <div className="typing-dots-container">
-                <span className="typing-dot"></span>
-                <span className="typing-dot"></span>
-                <span className="typing-dot"></span>
+            <div className="chat-row-inner bot-row-inner">
+              <img src={muskanAvatar} alt="Muskan" className="chat-msg-avatar" />
+              <div className="chat-bubble bot-bubble typing-bubble">
+                <span className="bubble-author">Muskan</span>
+                <div className="typing-dots-container">
+                  <span className="typing-dot"></span>
+                  <span className="typing-dot"></span>
+                  <span className="typing-dot"></span>
+                </div>
               </div>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
 import PlayerInfo from './PlayerInfo.jsx';
+import muskanAvatar from '../assets/muskan.jpg';
 
 export default function Board({
   fen,
@@ -106,13 +107,14 @@ export default function Board({
     <div className="board-column-wrapper">
       {/* Top Player Info Bar (Above Board) */}
       <PlayerInfo
-        name={isUserTop ? playerName : `ChessBot (${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)})`}
+        name={isUserTop ? playerName : `Muskan (${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)})`}
         rating={isUserTop ? playerRating : botRating}
         color={topColor}
         isTurn={currentTurn === topColor}
         isThinking={!isUserTop && isBotThinking}
         statusText={!isUserTop && isBotThinking ? 'Thinking...' : 'To move'}
         timeRemaining={topClock}
+        avatarSrc={isUserTop ? null : muskanAvatar}
       />
 
       {/* Chessboard */}
@@ -143,13 +145,14 @@ export default function Board({
 
       {/* Bottom Player Info Bar (Below Board) */}
       <PlayerInfo
-        name={!isUserTop ? playerName : `ChessBot (${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)})`}
+        name={!isUserTop ? playerName : `Muskan (${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)})`}
         rating={!isUserTop ? playerRating : botRating}
         color={bottomColor}
         isTurn={currentTurn === bottomColor}
         isThinking={isUserTop && isBotThinking}
         statusText={isUserTop && isBotThinking ? 'Thinking...' : 'To move'}
         timeRemaining={bottomClock}
+        avatarSrc={!isUserTop ? null : muskanAvatar}
       />
     </div>
   );
